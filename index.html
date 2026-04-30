@@ -1,0 +1,495 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        * {
+            scrollbar-width: none;
+        }
+
+        *::-webkit-scrollbar {
+            display: none;
+        }
+
+        .font-google-sans-flex {
+            font-family: "Google Sans Flex", sans-serif;
+        }
+
+        .font-montserrat {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        
+        @keyframes slideDown {
+            0% { transform: translateY(-60px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-slidedown {
+            animation: slideDown 0.8s ease forwards;
+        }
+
+        .animate-slidedown-delay {
+            opacity: 0;
+            animation: slideDown 0.8s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        /* Marquee */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes marquee2 {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+        }
+
+        .animate-marquee {
+            animation: marquee 15s linear infinite;
+        }
+
+        .animate-marquee2 {
+            animation: marquee2 15s linear infinite;
+        }
+
+        /* Fade up — scroll animation */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered delay untuk child elements */
+        .fade-up-child > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up-child.visible > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+        .fade-up-child.visible > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+        .fade-up-child.visible > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+        .fade-up-child.visible > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+
+        @keyframes dropdownOpen {
+        0% { transform: translateY(-10px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .dropdown-open {
+            animation: dropdownOpen 0.3s ease forwards;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  </head>
+  <body class="bg-stone-50">
+
+    <!-- Overlay Transisi -->
+    <div id="overlay" class="fixed inset-0 bg-black z-50 pointer-events-none"
+         style="transform: translateY(-100%); transition: transform 0.5s ease;">
+        <div class="flex items-center justify-center h-full">
+            <p id="overlay-text" class="text-white font-google-sans-flex text-5xl font-bold opacity-0 transition-opacity duration-300"></p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div id="nav-wrapper" class="relative z-50 transition-colors duration-300">
+    <header class="relative z-50 flex justify-between items-center px-6 py-4 animate-slidedown transition-colors duration-300">
+        <div class="font-bold font-google-sans-flex text-4xl pointer-events-none">
+            <h1>MsN</h1>
+        </div>
+        <div class="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
+            <a href="#manifesto" onclick="transitionTo('manifesto', 'Manifesto'); return false;" class="relative text-black after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-black after:transition-all after:duration-300 hover:after:w-full">Manifesto</a>
+            <a href="#services" onclick="transitionTo('services', 'Services'); return false;" class="relative text-black after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-black after:transition-all after:duration-300 hover:after:w-full">Services</a>
+            <a href="#about" onclick="transitionTo('about', 'About'); return false;" class="relative text-black after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-black after:transition-all after:duration-300 hover:after:w-full">About</a>
+        </div>
+        <div class="flex items-center gap-5 mr-5">
+            <a href="https://discord.com/users/580870882818523205" target="_blank">
+            <button class="border border-black bg-black text-white rounded-md py-2 px-3 flex items-center gap-2 hover:bg-white hover:text-black transition duration-300">
+                <i class="fa-solid fa-plus text-sm"></i> Contact Me
+            </button>
+            </a>
+            <button class="md:hidden text-2xl" onclick="toggleDropdown()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    <div id="dropdown" class="hidden flex-col px-10 py-4 gap-4 md:hidden absolute w-full bg-stone-50">
+        <a href="#manifesto" onclick="transitionTo('manifesto', 'Manifesto'); return false;" class="text-black hover:text-gray-500 transition duration-300">Manifesto</a>
+        <a href="#services" onclick="transitionTo('services', 'Services'); return false;" class="text-black hover:text-gray-500 transition duration-300">Services</a>
+        <a href="#about" onclick="transitionTo('about', 'About'); return false;" class="text-black hover:text-gray-500 transition duration-300">About</a>
+    </div>
+    </div>
+    <hero>
+        <div class="absolute inset-0 flex flex-col justify-center gap-4 opacity-10 pointer-events-none overflow-hidden">
+            <div class="whitespace-nowrap">
+                <p class="inline-block animate-marquee font-google-sans-flex text-8xl font-bold">
+                    Web Designer ✦ Grand Theft Auto LEO Development ✦ Web Designer ✦ Grand Theft Auto LEO Development ✦
+                </p>
+            </div>
+            <div class="whitespace-nowrap">
+                <p class="inline-block animate-marquee2 font-google-sans-flex text-8xl font-bold">
+                    Web Designer ✦ Grand Theft Auto LEO Development ✦ Web Designer ✦ Grand Theft Auto LEO Development ✦
+                </p>
+            </div>
+            <div class="whitespace-nowrap">
+                <p class="inline-block animate-marquee font-google-sans-flex text-8xl font-bold">
+                    Web Designer ✦ Grand Theft Auto LEO Development ✦ Web Designer ✦ Grand Theft Auto LEO Development ✦
+                </p>
+            </div>
+            <div class="whitespace-nowrap">
+                <p class="inline-block animate-marquee2 font-google-sans-flex text-8xl font-bold">
+                    Web Designer ✦ Grand Theft Auto LEO Development ✦ Web Designer ✦ Grand Theft Auto LEO Development ✦
+                </p>
+            </div>
+            <div class="whitespace-nowrap">
+                <p class="inline-block animate-marquee font-google-sans-flex text-8xl font-bold">
+                    Web Designer ✦ Grand Theft Auto LEO Development ✦ Web Designer ✦ Grand Theft Auto LEO Development ✦
+                </p>
+            </div>
+            <div class="whitespace-nowrap">
+                <p class="inline-block animate-marquee2 font-google-sans-flex text-8xl font-bold">
+                    Web Designer ✦ Grand Theft Auto LEO Development ✦ Web Designer ✦ Grand Theft Auto LEO Development ✦
+                </p>
+            </div>
+        </div>
+        <section class="relative flex flex-col items-center justify-center mt-30 gap-6 animate-slidedown-delay">
+            <img src="foto.png" alt="Foto" class="w-70 h-70 rounded-full object-cover mb-3 z-10">
+            <div class="text-center z-10">
+                <h1 class="font-bold font-google-sans-flex text-5xl">Niko Ardiansah Triwardana</h1>
+                <p class="font-montserrat text-gray-500 text-lg mt-2">Web Designer & Grand Theft Auto LEO Development and Training</p>
+            </div>
+        </section>
+    </hero>
+    <section id="manifesto" class="py-32 px-10 md:px-32 fade-up mt-10">
+        <div class="max-w-4xl mb-32 fade-up">
+            <p class="text-sm font-montserrat text-gray-400 mb-4">Ditulis oleh Niko Ardiansah Triwardana - Purwokerto, 2026</p>
+            <h2 class="font-google-sans-flex font-bold text-5xl md:text-7xl leading-tight mb-8">
+                Saya tidak hanya membangun script. Saya membangun kultur.
+            </h2>
+            <p class="font-montserrat text-gray-500 text-lg max-w-2xl">
+                Atas dasar satu prinsip yang saya pelajari dari Los Angeles Police Department — <strong class="text-black italic">To Protect and To Serve.</strong>
+            </p>
+        </div>
+
+        <div class="border-t border-gray-200 mb-32"></div>
+
+        <!-- Masalah -->
+        <div class="max-w-3xl mb-32 fade-up">
+            <p class="font-montserrat text-gray-800 text-xl leading-relaxed">
+                Di banyak server Roleplay Indonesia, LEO hanyalah formalitas. Pemain memakai seragam tanpa memahami apa yang seragam itu wakili. Tidak ada prosedur, tidak ada hierarki yang nyata, dan tidak ada kultur yang membuat institusi itu hidup dan dihormati.
+            </p>
+        </div>
+
+        <!-- Kenapa LAPD -->
+        <div class="max-w-3xl mb-32 fade-up">
+            <h3 class="font-google-sans-flex font-bold text-3xl mb-6">Kenapa LAPD?</h3>
+            <p class="font-montserrat text-gray-500 text-lg leading-relaxed">
+                LAPD bukan sekadar nama departemen kepolisian. Ini adalah standar tertinggi dalam dunia penegakan hukum — sistem yang telah teruji, hierarki yang jelas, dan kultur yang membuat setiap anggotanya bangga menyebut diri bagian dari institusi itu. Inilah yang saya adopsi dan bawa ke dunia Roleplay.
+            </p>
+        </div>
+
+        <div class="border-t border-gray-200 mb-32"></div>
+
+        <!-- Nilai nilai -->
+        <div class="max-w-3xl mb-32 flex flex-col gap-20 fade-up-child">
+            <div class="flex gap-10 fade-up">
+                <span class="font-google-sans-flex font-bold text-6xl text-gray-100 flex-shrink-0">01</span>
+                <div>
+                    <h4 class="font-google-sans-flex font-bold text-2xl mb-3">Sistem yang Telah Teruji</h4>
+                    <p class="font-montserrat text-gray-500 text-lg leading-relaxed">LAPD bukan lahir dalam semalam. Dibangun selama lebih dari 150 tahun, disempurnakan melalui ribuan kasus, dan dipercaya untuk melindungi kota terbesar kedua di Amerika. Sistem yang seperti ini bukan kebetulan — ini adalah hasil dari dedikasi yang tidak pernah berhenti.</p>
+                </div>
+            </div>
+            <div class="flex gap-10 fade-up">
+                <span class="font-google-sans-flex font-bold text-6xl text-gray-100 flex-shrink-0">02</span>
+                <div>
+                    <h4 class="font-google-sans-flex font-bold text-2xl mb-3">Prosedur yang Melindungi Semua Pihak</h4>
+                    <p class="font-montserrat text-gray-500 text-lg leading-relaxed">Prosedur LAPD bukan untuk mempersulit — tapi untuk melindungi. Melindungi masyarakat dari kesewenangan, dan melindungi anggota dari kesalahan yang tidak perlu. Di dunia Roleplay, prosedur inilah yang membuat setiap interaksi terasa nyata dan adil.</p>
+                </div>
+            </div>
+            <div class="flex gap-10 fade-up">
+                <span class="font-google-sans-flex font-bold text-6xl text-gray-100 flex-shrink-0">03</span>
+                <div>
+                    <h4 class="font-google-sans-flex font-bold text-2xl mb-3">Hierarki yang Dihormati</h4>
+                    <p class="font-montserrat text-gray-500 text-lg leading-relaxed">Dari Police Officer I sampai Chief of Police, setiap rank punya tanggung jawab nyata yang tidak bisa diabaikan.</p>
+                </div>
+            </div>
+            <div class="flex gap-10 fade-up">
+                <span class="font-google-sans-flex font-bold text-6xl text-gray-100 flex-shrink-0">04</span>
+                <div>
+                    <h4 class="font-google-sans-flex font-bold text-2xl mb-3">Kultur yang Diwariskan, Bukan Dipaksakan</h4>
+                    <p class="font-montserrat text-gray-500 text-lg leading-relaxed">Di LAPD, kultur tidak datang dari atasan yang memerintah — tapi dari setiap anggota yang memahami mengapa mereka ada di sana. Ketika setiap orang dari Police Officer I sampai Chief menghirup nilai yang sama, badge yang mereka pakai bukan sekadar aksesori — melainkan cerminan dari siapa mereka sebenarnya.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-200 mb-32"></div>
+
+  
+        <div class="max-w-3xl mb-16 fade-up">
+            <p class="font-montserrat text-gray-800 text-xl leading-relaxed mb-10">
+                Saya tidak membangun divisi LEO untuk terlihat keren. Saya membangun untuk membuat pemain benar-benar merasakan apa artinya menjadi bagian dari institusi yang profesional, terstruktur, dan hidup — seperti LAPD. Kalau kamu mau membangun LEO seperti itu di servermu — Contact me.
+            </p>
+            <a href="https://discord.com/users/580870882818523205" target="_blank">
+            <button class="border border-black bg-black text-white rounded-md py-3 px-6 flex items-center gap-2 hover:bg-white hover:text-black transition duration-300">
+                <i class="fa-solid fa-plus text-sm"></i> Contact me
+            </button>
+            </a>
+        </div>
+    </section>
+    <section id="services" class="py-32 px-6 md:px-16 fade-up">
+        <div class="mb-16 fade-up">
+            <p class="font-montserrat text-gray-400 text-sm mb-3">Layanan</p>
+            <h2 class="font-google-sans-flex font-bold text-5xl">LEO Training & Development</h2>
+            <p class="font-montserrat text-gray-500 text-lg mt-4 max-w-xl">Dua paket pelatihan yang dirancang untuk membangun divisi LEO yang profesional, terstruktur, dan hidup — seperti LAPD.</p>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-8 fade-up-child">
+            <!-- Paket Basic -->
+            <div class="border border-gray-200 rounded-2xl p-8 flex-1">
+                <p class="font-montserrat text-gray-400 text-sm mb-4">Paket Basic</p>
+                <p class="font-google-sans-flex font-bold text-4xl mb-2">Rp 200.000</p>
+                <p class="font-montserrat text-gray-400 text-sm mb-8">2x pelatihan per minggu</p>
+                <div class="border-t border-gray-100 pt-8 flex flex-col gap-4 mb-10">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-check text-black text-sm"></i>
+                        <p class="font-montserrat text-gray-700 text-sm">Modul Basic Patrol</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-check text-black text-sm"></i>
+                        <p class="font-montserrat text-gray-700 text-sm">Pelatihan FTO</p>
+                    </div>
+                </div>
+                <a href="https://discord.com/users/580870882818523205" target="_blank">
+                <button class="w-full border border-black text-black rounded-md py-3 px-6 flex items-center justify-center gap-2 hover:bg-black hover:text-white transition duration-300">
+                    <i class="fa-solid fa-plus text-sm"></i> Contact Me
+                </button>
+                </a>
+            </div>
+
+            <!-- Paket Complete -->
+            <div class="border border-black bg-black rounded-2xl p-8 flex-1 relative">
+                <span class="absolute top-6 right-6 bg-white text-black text-xs font-montserrat font-medium px-3 py-1 rounded-full">Recommended</span>
+                <p class="font-montserrat text-gray-400 text-sm mb-4">Paket Complete</p>
+                <p class="font-google-sans-flex font-bold text-4xl text-white mb-2">Rp 500.000</p>
+                <p class="font-montserrat text-gray-400 text-sm mb-8">2x pelatihan per minggu</p>
+                <div class="border-t border-gray-800 pt-8 flex flex-col gap-4 mb-10">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Modul Basic Patrol</p></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Pelatihan FTO</p></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Modul Detective Area</p></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Modul Metropolitan</p></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Modul GED</p></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Modul Traffic Division</p></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Modul Air Support Division</p></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-check text-white text-sm"></i><p class="font-montserrat text-gray-300 text-sm">Modul Administrative (Clerk & Recruitment Staff)</p></div>
+                </div>
+                <a href="https://discord.com/users/580870882818523205" target="_blank">
+                <button class="w-full border border-white text-white rounded-md py-3 px-6 flex items-center justify-center gap-2 hover:bg-white hover:text-black transition duration-300">
+                    <i class="fa-solid fa-plus text-sm"></i> Contact Me
+                </button>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-32 px-6 md:px-16 fade-up">
+        <div class="mb-16 fade-up">
+            <p class="font-montserrat text-gray-400 text-sm mb-3">Tentang Saya</p>
+            <h2 class="font-google-sans-flex font-bold text-5xl">Niko Ardiansah Triwardana</h2>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-16 items-start mb-32 fade-up">
+            <!-- Foto kiri -->
+            <div class="flex-shrink-0">
+                <img src="foto.png" alt="Foto" class="w-64 h-64 rounded-2xl object-cover">
+                <div class="mt-4 flex flex-col gap-2">
+                    <p class="font-montserrat text-gray-400 text-sm">📍 Purwokerto, Indonesia</p>
+                    <p class="font-montserrat text-gray-400 text-sm">💻 Web Designer</p>
+                    <p class="font-montserrat text-gray-400 text-sm">🚔 LEO Developer</p>
+                </div>
+            </div>
+
+            <!-- Teks kanan -->
+            <div class="flex flex-col gap-10">
+                <p class="font-montserrat text-gray-800 text-lg leading-relaxed">
+                    Saya Niko Ardiansah Triwardana, seorang Web Designer dan LEO Developer dari Purwokerto.
+                </p>
+                <div>
+                    <h3 class="font-google-sans-flex font-bold text-xl mb-3">Passion di Web Design</h3>
+                    <p class="font-montserrat text-gray-500 text-lg leading-relaxed">
+                        Bagi saya, programming bukan sekadar pekerjaan — ini adalah candu yang menyenangkan. Ada kepuasan tersendiri yang sulit dijelaskan ketika sebuah program yang saya tulis akhirnya berjalan sempurna. Dopamin itu nyata, dan itulah yang membuat saya selalu ingin membangun lebih, menciptakan lebih, dan tidak pernah berhenti.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-google-sans-flex font-bold text-xl mb-3">Passion di LEO Development</h3>
+                    <p class="font-montserrat text-gray-500 text-lg leading-relaxed">
+                        Di dunia GTA Roleplay Indonesia, saya melihat sesuatu yang selama ini hilang — penegakan hukum yang benar-benar hidup dan adil. Bukan hanya soal siapa yang memegang senjata, tapi tentang bagaimana hukum itu ditegakkan dengan integritas — termasuk ketika kebenaran ada di pihak suspect. SAMP bagi saya bukan sekadar game, ini adalah ruang di mana saya bisa berimajinasi bebas, melepas stress, dan membangun sesuatu yang benar-benar bermakna bagi komunitas Roleplay Indonesia.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-200 mb-16"></div>
+
+        <!-- Projects -->
+        <div class="fade-up">
+            <p class="font-montserrat text-gray-400 text-sm mb-3">Proyek</p>
+            <h3 class="font-google-sans-flex font-bold text-3xl mb-10">Yang Sudah Saya Kerjakan</h3>
+            <div class="flex flex-col md:flex-row gap-8 fade-up-child">
+                <!-- Project 1 -->
+                <div class="border border-gray-200 rounded-2xl p-8 flex-1">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="bg-green-100 text-green-700 text-xs font-montserrat px-3 py-1 rounded-full">Live</span>
+                        <span class="font-montserrat text-gray-400 text-xs">SAMP</span>
+                    </div>
+                    <h4 class="font-google-sans-flex font-bold text-xl mb-3">LEO Development Server SGB</h4>
+                    <p class="font-montserrat text-gray-500 text-sm leading-relaxed">
+                        Membangun sistem LEO berbasis LAPD untuk server GTA SAMP SGB — mencakup prosedur, hierarki, dan kultur yang membuat divisi kepolisian server terasa nyata dan profesional.
+                    </p>
+                    <a href="https://discord.gg/TdhCs4ZC6Z" target="_blank"
+                       class="mt-6 flex items-center gap-2 text-sm font-montserrat text-gray-400 hover:text-black transition duration-300">
+                        <i class="fa-brands fa-discord"></i> Join Server Discord Sharing Gils Blogs
+                    </a>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="border border-gray-200 rounded-2xl p-8 flex-1">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="bg-yellow-100 text-yellow-700 text-xs font-montserrat px-3 py-1 rounded-full">In Progress</span>
+                        <span class="font-montserrat text-gray-400 text-xs">RageMP</span>
+                    </div>
+                    <h4 class="font-google-sans-flex font-bold text-xl mb-3">LEO Development Oseanix</h4>
+                    <p class="font-montserrat text-gray-500 text-sm leading-relaxed">
+                        Pengembangan sistem LEO untuk platform RageMP di server Oseanix — masih dalam tahap pengerjaan dengan target yang lebih ambisius dari proyek sebelumnya.
+                    </p>
+                    <a href="https://discord.gg/mpwe9mxkTk" target="_blank"
+                       class="mt-6 flex items-center gap-2 text-sm font-montserrat text-gray-400 hover:text-black transition duration-300">
+                        <i class="fa-brands fa-discord"></i> Join Server Discord Oseanix Roleplay/SYNT Club House
+                    </a>
+                </div>
+                <div class="border border-black bg-black rounded-2xl p-8 flex-1 flex flex-col justify-between">
+                    <div>
+                        <p class="font-google-sans-flex font-bold text-2xl text-white mb-3">Mau bekerja sama?</p>
+                        <p class="font-montserrat text-gray-400 text-sm leading-relaxed">Saya selalu terbuka untuk proyek baru yang menantang dan bermakna.</p>
+                    </div>
+                    <a href="https://discord.com/users/580870882818523205" target="_blank">
+                    <button class="mt-8 w-full border border-white text-white rounded-md py-3 px-6 flex items-center justify-center gap-2 hover:bg-white hover:text-black transition duration-300">
+                        <i class="fa-solid fa-plus text-sm"></i> Contact Me
+                    </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="relative bg-black py-32 px-6 md:px-16 fade-up overflow-hidden">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-white opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-72 h-72 bg-white opacity-5 rounded-full translate-x-1/2 translate-y-1/2"></div>
+        <div class="absolute top-1/2 left-1/2 w-px h-32 bg-white opacity-10 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
+            <div>
+                <p class="font-montserrat text-gray-400 text-sm mb-4 flex items-center gap-2">
+                    <span class="w-8 h-px bg-gray-600 inline-block"></span>
+                    Siap memulai?
+                </p>
+                <h2 class="font-google-sans-flex font-bold text-5xl md:text-6xl text-white max-w-xl leading-tight">
+                    Bangun LEO servermu bersama saya.
+                </h2>
+            </div>
+            <a href="https://discord.com/users/580870882818523205" target="_blank">
+            <button class="flex-shrink-0 border border-white text-white px-8 py-4 rounded-md flex items-center gap-2 hover:bg-white hover:text-black transition duration-300 font-montserrat">
+                <i class="fa-solid fa-plus text-sm"></i> Contact Me
+            </button>
+            </a>
+        </div>
+    </section>
+    <footer class="border-t border-gray-100 py-10 px-6 md:px-16">
+        <div class="flex flex-col items-center gap-6">
+            <div class="text-center">
+                <p class="font-google-sans-flex font-bold text-2xl mb-1">MSn</p>
+                <p class="font-montserrat text-gray-400 text-sm">© 2026 Niko Ardiansah Triwardana. All rights reserved.</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="#manifesto" class="font-montserrat text-gray-400 text-sm hover:text-black transition duration-300">Manifesto</a>
+                <a href="#services" class="font-montserrat text-gray-400 text-sm hover:text-black transition duration-300">Services</a>
+                <a href="#about" class="font-montserrat text-gray-400 text-sm hover:text-black transition duration-300">About</a>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <div class="flex items-center gap-4">
+                    <a href="https://discord.com/users/580870882818523205" target="_blank" class="text-gray-400 hover:text-black transition duration-300">
+                        <i class="fa-brands fa-discord text-xl"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/masnicko/" target="_blank" class="text-gray-400 hover:text-black transition duration-300">
+                        <i class="fa-brands fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+                <p class="font-montserrat text-gray-300 text-xs italic">To Protect and To Serve.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+            function toggleDropdown() {
+                const dropdown = document.getElementById('dropdown')
+                const header = document.querySelector('header')
+                
+                dropdown.classList.toggle('hidden')
+                dropdown.classList.toggle('flex')
+                
+                if (!dropdown.classList.contains('hidden')) {
+                    dropdown.classList.add('dropdown-open')
+                    header.classList.add('bg-stone-50')
+                } else {
+                    dropdown.classList.remove('dropdown-open')
+                    header.classList.remove('bg-stone-50')
+                }
+            }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible')
+                }
+            })
+        }, { threshold: 0.1 })
+
+        document.querySelectorAll('.fade-up, .fade-up-child').forEach(el => observer.observe(el))
+
+        function transitionTo(targetId, label) {
+            const overlay = document.getElementById('overlay')
+            const text = document.getElementById('overlay-text')
+            text.textContent = label
+            overlay.style.transform = 'translateY(0)'
+            setTimeout(() => { text.style.opacity = '1' }, 300)
+            setTimeout(() => {
+                document.getElementById(targetId).scrollIntoView()
+                setTimeout(() => {
+                    text.style.opacity = '0'
+                    overlay.style.transform = 'translateY(100%)'
+                    setTimeout(() => {
+                        overlay.style.transition = 'none'
+                        overlay.style.transform = 'translateY(-100%)'
+                        setTimeout(() => { overlay.style.transition = 'transform 0.5s ease' }, 50)
+                    }, 500)
+                }, 300)
+            }, 800)
+        }
+    </script>
+
+  </body>
+</html>
